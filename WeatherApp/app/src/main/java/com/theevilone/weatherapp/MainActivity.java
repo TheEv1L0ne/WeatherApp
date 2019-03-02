@@ -24,12 +24,10 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
-    private AppBarLayout appBarLayout; //????
     private ViewPager viewPager;
 
 
     Button refreshWeatherData;
-    EditText cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,17 +48,16 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        cityName = findViewById(R.id.editText);
 
         refreshWeatherData = findViewById(R.id.btn_refresh_data);
         refreshWeatherData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!cityName.getText().toString().isEmpty()) {
-                    //forecast
-//                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/weather?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
-                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/forecast?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
-                }
+//                if(!cityName.getText().toString().isEmpty()) {
+//                    //forecast
+////                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/weather?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
+//                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/forecast?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
+//                }
             }
         });
     }
