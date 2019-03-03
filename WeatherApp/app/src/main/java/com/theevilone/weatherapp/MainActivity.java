@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     Button refreshWeatherData;
+    Button settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPageAdapter adapter = new ViewPageAdapter(getSupportFragmentManager());
         adapter.AddFragment(fragmentCurrentWeather, "Current");
-        adapter.AddFragment(new FragmentFiveDayWeather(), "Five Days Forecast");
+        adapter.AddFragment(new FragmentFiveDayWeather(), "5 Days");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
 ////                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/weather?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
 //                    new JsonTask().execute("http://api.openweathermap.org/data/2.5/forecast?q=" + cityName.getText().toString() +"&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
 //                }
+            }
+        });
+
+        settings = findViewById(R.id.btn_settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsDialog settingsDialog = new SettingsDialog();
+                settingsDialog.show(getSupportFragmentManager(), "my_dialog");
             }
         });
     }
