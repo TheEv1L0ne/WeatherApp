@@ -35,17 +35,17 @@
 
 
     <TextView
-        android:id="@+id/tv_weather_description"
+        android:id="@+id/tv_current_weather_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
         android:text="SUNNY"
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tv_min_and_max_current"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
