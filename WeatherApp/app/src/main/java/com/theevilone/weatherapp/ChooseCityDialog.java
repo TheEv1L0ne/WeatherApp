@@ -40,8 +40,9 @@ public class ChooseCityDialog  extends DialogFragment {
                     Toast.makeText(getActivity(), "Please enter city name!",
                             Toast.LENGTH_LONG).show();
                 }
-
-                activity.parseData();
+                else {
+                    activity.parseData();
+                }
 
             }
         });

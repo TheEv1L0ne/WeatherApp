@@ -2,9 +2,14 @@ package com.theevilone.weatherapp.CurrentWeather;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+
+import com.theevilone.weatherapp.HelperClasses.StaticStrings;
+import com.theevilone.weatherapp.MainActivity;
 
 import org.json.JSONException;
 
@@ -21,6 +26,8 @@ public class JsonTaskForCurrentWeather {
     private Activity activityInstance;
     private FragmentCurrentWeather fragmentCurrentWeather;
 
+    SharedPreferences sharedpreferences;
+
     public JsonTaskForCurrentWeather( Activity activityInstance, FragmentCurrentWeather fragmentCurrentWeather) {
         this.activityInstance = activityInstance;
         this.fragmentCurrentWeather = fragmentCurrentWeather;
@@ -30,7 +37,16 @@ public class JsonTaskForCurrentWeather {
 
     public void startTask()
     {
-        new JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  "http://api.openweathermap.org/data/2.5/weather?q=Belgrade&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
+        //URL EXAMPLE: "http://api.openweathermap.org/data/2.5/weather?q=Belgrade&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb"
+
+        sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String apiUrl = "";
+        int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+        if(selected == 0)
+            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + "Belgrade" + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
+        else
+            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + "Belgrade" + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" +StaticStrings.API_KEY;
+        new JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  apiUrl);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {

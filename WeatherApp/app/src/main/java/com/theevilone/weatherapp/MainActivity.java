@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     CustomSharedPreferences customSharedPreferences;
 
     public static Activity staticMainActivity = null;
+
+    TextView cityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        cityName = findViewById(R.id.tv_selected_city);
+        cityName.setText("PERIVOJE");
 
         refreshWeatherData = findViewById(R.id.btn_refresh_data);
         refreshWeatherData.setOnClickListener(new View.OnClickListener() {
@@ -81,10 +86,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SettingsDialog settingsDialog = new SettingsDialog();
+                settingsDialog.SetActivity(MainActivity.this);
                 settingsDialog.show(getSupportFragmentManager(), "settings_dialog");
             }
         });
 
+
+
+    }
+
+    public void setCityName(String name)
+    {
+        cityName.setText(name);
     }
 
     public void parseData()

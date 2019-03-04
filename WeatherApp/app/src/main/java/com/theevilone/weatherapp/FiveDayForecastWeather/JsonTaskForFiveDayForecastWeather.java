@@ -2,6 +2,8 @@ package com.theevilone.weatherapp.FiveDayForecastWeather;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -9,6 +11,8 @@ import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.FragmentCurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.JSONParserForCurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.JsonTaskForCurrentWeather;
+import com.theevilone.weatherapp.HelperClasses.StaticStrings;
+import com.theevilone.weatherapp.MainActivity;
 
 import org.json.JSONException;
 
@@ -25,6 +29,8 @@ public class JsonTaskForFiveDayForecastWeather {
     private Activity activityInstance;
     private FragmentFiveDayWeather fragmentFiveDayWeather;
 
+    SharedPreferences sharedpreferences;
+
     public JsonTaskForFiveDayForecastWeather( Activity activityInstance, FragmentFiveDayWeather fragmentFiveDayWeather) {
         this.activityInstance = activityInstance;
         this.fragmentFiveDayWeather = fragmentFiveDayWeather;
@@ -34,7 +40,16 @@ public class JsonTaskForFiveDayForecastWeather {
 
     public void startTask()
     {
-        new JsonTaskForFiveDayForecastWeather.JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  "http://api.openweathermap.org/data/2.5/forecast?q=Belgrade&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb");
+
+        sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String apiUrl = "";
+        int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+        if(selected == 0)
+            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_FORECAST + "Belgrade" + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
+        else
+            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_FORECAST + "Belgrade" + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" +StaticStrings.API_KEY;
+
+        new JsonTaskForFiveDayForecastWeather.JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  apiUrl);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
