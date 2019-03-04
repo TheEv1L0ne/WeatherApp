@@ -1,17 +1,22 @@
 package com.theevilone.weatherapp.CurrentWeather;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
+import com.theevilone.weatherapp.HelperClasses.StaticStrings;
+import com.theevilone.weatherapp.MainActivity;
 import com.theevilone.weatherapp.R;
 
 public class FragmentCurrentWeather extends Fragment {
@@ -43,20 +48,41 @@ public class FragmentCurrentWeather extends Fragment {
 
 //        refreshCurrentWeatherData();
 
+        SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
+        {
+            Log.i("ToastLog", "First time here");
+            parseDataForCurrent();
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT, 0).apply();
+        }
+        else
+        {
+            Log.i("ToastLog", "Not First time here");
+            CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+            CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
+            refreshCurrentWeatherData(currentWeather);
+        }
+
         return view;
     }
 
-    public void parseDataForCurrent(Activity activity)
+
+    public void parseDataForCurrent()
     {
-        jsonTaskForCurrentWeather = new JsonTaskForCurrentWeather(activity, this);
+        jsonTaskForCurrentWeather = new JsonTaskForCurrentWeather(MainActivity.staticMainActivity, this);
         jsonTaskForCurrentWeather.startTask();
     }
 
     public void refreshCurrentWeatherData(CurrentWeather cw)
     {
-        currentWeather.setText(cw.getTemperature());
+
+        //Storing data
+        CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+        customSharedPreferences.putCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY, cw);
+
+        currentWeather.setText(cw.getTemperature()+ "°C");
         currentWeatherDescription.setText(cw.getWeatherText());
-        currentMinAndMax.setText(cw.getMinTemperature() + "/" + cw.getMaxTemperature());
+        currentMinAndMax.setText(cw.getMinTemperature() + "°C/" + cw.getMaxTemperature()+ "°C");
         currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(cw.getIcon())));
     }
 

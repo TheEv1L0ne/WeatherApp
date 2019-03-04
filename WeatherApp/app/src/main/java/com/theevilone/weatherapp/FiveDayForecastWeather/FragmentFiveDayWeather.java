@@ -1,11 +1,14 @@
 package com.theevilone.weatherapp.FiveDayForecastWeather;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,9 @@ import android.widget.TextView;
 
 import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.JsonTaskForCurrentWeather;
+import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
+import com.theevilone.weatherapp.HelperClasses.StaticStrings;
+import com.theevilone.weatherapp.MainActivity;
 import com.theevilone.weatherapp.R;
 
 public class FragmentFiveDayWeather extends Fragment {
@@ -55,21 +61,42 @@ public class FragmentFiveDayWeather extends Fragment {
         weatherImage[4] = view.findViewById(R.id.img_icon5);
         weatherTemperature[4] = view.findViewById(R.id.tv_temperature5);
 
+        SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,-1) == -1)
+        {
+            Log.i("ToastLog", "First time here");
+            parseDataForFiveDaysForcast();
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY, 0).apply();
+        }
+        else
+        {
+            Log.i("ToastLog", "Not First time here");
+            CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+            FiveDayWeather fiveDayWeather = customSharedPreferences.getFiveDayForecastWeather(StaticStrings.FIVE_DAY_WEATHER_DATA_KEY);
+            refreshCurrentWeatherData(fiveDayWeather);
+        }
+
         return view;
     }
 
-    public void parseDataForFiveDaysForcast(Activity activity)
+    public void parseDataForFiveDaysForcast()
     {
-        jsonTaskForFiveDayForecastWeather = new JsonTaskForFiveDayForecastWeather(activity, this);
+        jsonTaskForFiveDayForecastWeather = new JsonTaskForFiveDayForecastWeather(MainActivity.staticMainActivity, this);
         jsonTaskForFiveDayForecastWeather.startTask();
     }
 
     public void refreshCurrentWeatherData(FiveDayWeather fdw)
     {
+
+        //Storing data
+        CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+        customSharedPreferences.putFiveDayForecastWeather(StaticStrings.FIVE_DAY_WEATHER_DATA_KEY, fdw);
+
+        //Setting data into view
         for(int i=0;i<weatherDay.length;i++)
         {
             weatherDay[i].setText(fdw.getDay().get(i));
-            weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+"/"+fdw.getTemperatureMax().get(i));
+            weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°C/"+fdw.getTemperatureMax().get(i)+ "°C");
             weatherImage[i].setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(fdw.getImage().get(i))));
         }
     }

@@ -1,5 +1,6 @@
 package com.theevilone.weatherapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ public class ChooseCityDialog  extends DialogFragment {
 
 
     EditText searchCityName;
+    MainActivity activity;
 
     @NonNull
     @Override
@@ -38,6 +40,9 @@ public class ChooseCityDialog  extends DialogFragment {
                     Toast.makeText(getActivity(), "Please enter city name!",
                             Toast.LENGTH_LONG).show();
                 }
+
+                activity.parseData();
+
             }
         });
 
@@ -52,4 +57,10 @@ public class ChooseCityDialog  extends DialogFragment {
 
         return builder.create();
     }
+
+    public void SetActivity(MainActivity activity)
+    {
+        this.activity = activity;
+    }
+
 }

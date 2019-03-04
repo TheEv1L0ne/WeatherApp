@@ -1,7 +1,8 @@
 package com.theevilone.weatherapp;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,17 +10,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.FragmentCurrentWeather;
 import com.theevilone.weatherapp.FiveDayForecastWeather.FragmentFiveDayWeather;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
+import com.theevilone.weatherapp.HelperClasses.StaticStrings;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,15 +30,28 @@ public class MainActivity extends AppCompatActivity {
     private FragmentCurrentWeather fragmentCurrentWeather;
     private FragmentFiveDayWeather fragmentFiveDayWeather;
 
+    SharedPreferences sharedpreferences;
+    CustomSharedPreferences customSharedPreferences;
+
+    public static Activity staticMainActivity = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(staticMainActivity == null)
+        {
+            staticMainActivity = MainActivity.this;
+        }
+
+        sharedpreferences = getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        customSharedPreferences = new CustomSharedPreferences(this);
+
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.viewpager_id);
 
-
+        //Creating Tab Fragments
         fragmentCurrentWeather = new FragmentCurrentWeather();
         fragmentFiveDayWeather = new FragmentFiveDayWeather();
 
@@ -58,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                fragmentCurrentWeather.parseDataForCurrent(MainActivity.this);
-                fragmentFiveDayWeather.parseDataForFiveDaysForcast(MainActivity.this);
+                ChooseCityDialog chooseCityDialog = new ChooseCityDialog();
+                chooseCityDialog.SetActivity(MainActivity.this);
+                chooseCityDialog.show(getSupportFragmentManager(), "choose_dialog");
 
 
             }
@@ -73,5 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 settingsDialog.show(getSupportFragmentManager(), "settings_dialog");
             }
         });
+
     }
+
+    public void parseData()
+    {
+        fragmentCurrentWeather.parseDataForCurrent();
+        fragmentFiveDayWeather.parseDataForFiveDaysForcast();
+    }
+
 }

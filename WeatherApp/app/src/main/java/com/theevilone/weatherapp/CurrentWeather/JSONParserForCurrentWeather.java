@@ -24,6 +24,10 @@ public class JSONParserForCurrentWeather {
         String temp_max = jObjectMain.getString("temp_max");
         String temp_min = jObjectMain.getString("temp_min");
 
+        temp = String.valueOf(Float.valueOf(temp).intValue());
+        temp_max = String.valueOf(Float.valueOf(temp_max).intValue());
+        temp_min = String.valueOf(Float.valueOf(temp_min).intValue());
+
         String icon="";
         String description="";
 

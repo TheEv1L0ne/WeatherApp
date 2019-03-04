@@ -8,6 +8,9 @@ public class CurrentWeather {
     private String minTemperature;
     private String maxTemperature;
 
+
+
+
     public CurrentWeather() {
     }
 
