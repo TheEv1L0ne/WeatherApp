@@ -1,13 +1,10 @@
-package com.theevilone.weatherapp.JSONParser;
+package com.theevilone.weatherapp.CurrentWeather;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
-import com.theevilone.weatherapp.DataModels.CurrentWeather;
-import com.theevilone.weatherapp.FragmentCurrentWeather;
 
 import org.json.JSONException;
 

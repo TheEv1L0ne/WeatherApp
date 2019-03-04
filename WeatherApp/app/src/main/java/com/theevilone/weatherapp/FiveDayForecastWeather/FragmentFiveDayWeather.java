@@ -1,4 +1,4 @@
-package com.theevilone.weatherapp;
+package com.theevilone.weatherapp.FiveDayForecastWeather;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,53 +12,66 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.theevilone.weatherapp.DataModels.CurrentWeather;
-import com.theevilone.weatherapp.JSONParser.JsonTaskForCurrentWeather;
+import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
+import com.theevilone.weatherapp.CurrentWeather.JsonTaskForCurrentWeather;
+import com.theevilone.weatherapp.R;
 
-public class FragmentCurrentWeather extends Fragment {
+public class FragmentFiveDayWeather extends Fragment {
 
     View view;
 
-    TextView currentWeather;
-    TextView currentWeatherDescription;
-    TextView currentMinAndMax;
-    ImageView currentImage;
+    TextView weatherDay[] = new TextView[5];
+    ImageView weatherImage[] = new ImageView[5];
+    TextView weatherTemperature[] = new TextView[5];
 
-    JsonTaskForCurrentWeather jsonTaskForCurrentWeather;
+    JsonTaskForFiveDayForecastWeather jsonTaskForFiveDayForecastWeather;
 
-    public FragmentCurrentWeather() {
-
+    public FragmentFiveDayWeather() {
     }
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.tab1_current_weather, container, false);
+        view = inflater.inflate(R.layout.tab2_five_day_weather, container, false);
 
-        currentWeather = view.findViewById(R.id.tv_current_temperature);
-        currentWeatherDescription = view.findViewById(R.id.tv_current_weather_description);
-        currentMinAndMax = view.findViewById(R.id.tv_min_and_max_current);
-        currentImage = view.findViewById(R.id.img_weather_image);
+        weatherDay[0] = view.findViewById(R.id.tv_day1);
+        weatherImage[0] = view.findViewById(R.id.img_icon1);
+        weatherTemperature[0] = view.findViewById(R.id.tv_temperature1);
 
-//        refreshCurrentWeatherData();
+        weatherDay[1] = view.findViewById(R.id.tv_day2);
+        weatherImage[1] = view.findViewById(R.id.img_icon2);
+        weatherTemperature[1] = view.findViewById(R.id.tv_temperature2);
+
+        weatherDay[2] = view.findViewById(R.id.tv_day3);
+        weatherImage[2] = view.findViewById(R.id.img_icon3);
+        weatherTemperature[2] = view.findViewById(R.id.tv_temperature3);
+
+        weatherDay[3] = view.findViewById(R.id.tv_day4);
+        weatherImage[3] = view.findViewById(R.id.img_icon4);
+        weatherTemperature[3] = view.findViewById(R.id.tv_temperature4);
+
+        weatherDay[4] = view.findViewById(R.id.tv_day5);
+        weatherImage[4] = view.findViewById(R.id.img_icon5);
+        weatherTemperature[4] = view.findViewById(R.id.tv_temperature5);
 
         return view;
     }
 
-    public void parseDataForCurrent(Activity activity)
+    public void parseDataForFiveDaysForcast(Activity activity)
     {
-        jsonTaskForCurrentWeather = new JsonTaskForCurrentWeather(activity, this);
-        jsonTaskForCurrentWeather.startTask();
+        jsonTaskForFiveDayForecastWeather = new JsonTaskForFiveDayForecastWeather(activity, this);
+        jsonTaskForFiveDayForecastWeather.startTask();
     }
 
-    public void refreshCurrentWeatherData(CurrentWeather cw)
+    public void refreshCurrentWeatherData(FiveDayWeather fdw)
     {
-        currentWeather.setText(cw.getTemperature());
-        currentWeatherDescription.setText(cw.getWeatherText());
-        currentMinAndMax.setText(cw.getMinTemperature() + "/" + cw.getMaxTemperature());
-        currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(cw.getIcon())));
+        for(int i=0;i<weatherDay.length;i++)
+        {
+            weatherDay[i].setText(fdw.getDay().get(i));
+            weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+"/"+fdw.getTemperatureMax().get(i));
+            weatherImage[i].setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(fdw.getImage().get(i))));
+        }
     }
 
     private int getImage(String imageCode)
@@ -121,10 +134,9 @@ public class FragmentCurrentWeather extends Fragment {
             case "13n":
                 imageDecoded = R.drawable.image27;
                 break;
-                default:
-                    imageDecoded = R.drawable.image40;
+            default:
+                imageDecoded = R.drawable.image40;
         }
         return imageDecoded;
     }
-
 }

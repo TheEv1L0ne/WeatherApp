@@ -1,4 +1,4 @@
-package com.theevilone.weatherapp.DataModels;
+package com.theevilone.weatherapp.CurrentWeather;
 
 public class CurrentWeather {
 

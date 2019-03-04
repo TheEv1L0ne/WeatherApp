@@ -1,9 +1,6 @@
-package com.theevilone.weatherapp.JSONParser;
+package com.theevilone.weatherapp.CurrentWeather;
 
-import android.app.Activity;
 import android.util.Log;
-
-import com.theevilone.weatherapp.DataModels.CurrentWeather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
