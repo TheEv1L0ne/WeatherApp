@@ -21,12 +21,12 @@ public class JSONParserForCurrentWeather {
 
         JSONObject jObjectMain = new JSONObject(aJsonString);
         String temp = jObjectMain.getString("temp");
-        String temp_max = jObjectMain.getString("temp_max");
-        String temp_min = jObjectMain.getString("temp_min");
+        String humidity = jObjectMain.getString("humidity");
+        String pressure = jObjectMain.getString("pressure");
 
         temp = String.valueOf(Float.valueOf(temp).intValue());
-        temp_max = String.valueOf(Float.valueOf(temp_max).intValue());
-        temp_min = String.valueOf(Float.valueOf(temp_min).intValue());
+        humidity = String.valueOf(Float.valueOf(humidity).intValue());
+        pressure = String.valueOf(Float.valueOf(pressure).intValue());
 
         String icon="";
         String description="";
@@ -45,16 +45,16 @@ public class JSONParserForCurrentWeather {
         }
 
         Log.i("JSONLOG", temp);
-        Log.i("JSONLOG", temp_max);
-        Log.i("JSONLOG", temp_min);
+        Log.i("JSONLOG", humidity);
+        Log.i("JSONLOG", pressure);
         Log.i("JSONLOG", icon);
         Log.i("JSONLOG", description);
 
         CurrentWeather currentWeather = new CurrentWeather();
         currentWeather.setTemperature(temp);
         currentWeather.setIcon(icon);
-        currentWeather.setMaxTemperature(temp_max);
-        currentWeather.setMinTemperature(temp_min);
+        currentWeather.setHumidity(humidity);
+        currentWeather.setPressure(pressure);
         currentWeather.setWeatherText(description);
 
         return currentWeather;

@@ -23,8 +23,8 @@ public class CustomSharedPreferences {
         editor.putString(key + "_temperature", currentWeather.getTemperature());
         editor.putString(key + "_icon", currentWeather.getIcon());
         editor.putString(key + "_weatherText", currentWeather.getWeatherText());
-        editor.putString(key + "_minTemperature", currentWeather.getMinTemperature());
-        editor.putString(key + "_maxTemperature", currentWeather.getMinTemperature());
+        editor.putString(key + "_pressure", currentWeather.getPressure());
+        editor.putString(key + "_humidity", currentWeather.getHumidity());
         editor.apply();
     }
 
@@ -34,8 +34,8 @@ public class CustomSharedPreferences {
         currentWeather.setTemperature(sharedPreferences.getString(key + "_temperature", ""));
         currentWeather.setIcon(sharedPreferences.getString(key + "_icon", ""));
         currentWeather.setWeatherText(sharedPreferences.getString(key + "_weatherText", ""));
-        currentWeather.setMinTemperature(sharedPreferences.getString(key + "_minTemperature", ""));
-        currentWeather.setMaxTemperature(sharedPreferences.getString(key + "_maxTemperature", ""));
+        currentWeather.setPressure(sharedPreferences.getString(key + "_pressure", ""));
+        currentWeather.setHumidity(sharedPreferences.getString(key + "_humidity", ""));
 
         return currentWeather;
     }

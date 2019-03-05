@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Creating Tab Fragments
         fragmentCurrentWeather = new FragmentCurrentWeather();
+        fragmentCurrentWeather.setMainActivity(this);
         fragmentFiveDayWeather = new FragmentFiveDayWeather();
 
         ViewPageAdapter adapter = new ViewPageAdapter(getSupportFragmentManager());
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         cityName = findViewById(R.id.tv_selected_city);
-        cityName.setText("PERIVOJE");
 
         //SETTINGS - START
 

@@ -5,8 +5,8 @@ public class CurrentWeather {
     private String temperature;
     private String icon;
     private String weatherText;
-    private String minTemperature;
-    private String maxTemperature;
+    private String pressure;
+    private String humidity;
 
 
 
@@ -38,19 +38,19 @@ public class CurrentWeather {
         this.weatherText = weatherText;
     }
 
-    public String getMinTemperature() {
-        return minTemperature;
+    public String getPressure() {
+        return pressure;
     }
 
-    public void setMinTemperature(String minTemperature) {
-        this.minTemperature = minTemperature;
+    public void setPressure(String pressure) {
+        this.pressure = pressure;
     }
 
-    public String getMaxTemperature() {
-        return maxTemperature;
+    public String getHumidity() {
+        return humidity;
     }
 
-    public void setMaxTemperature(String maxTemperature) {
-        this.maxTemperature = maxTemperature;
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
     }
 }

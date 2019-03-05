@@ -25,10 +25,12 @@ public class FragmentCurrentWeather extends Fragment {
 
     TextView currentWeather;
     TextView currentWeatherDescription;
-    TextView currentMinAndMax;
+    TextView humidity;
+    TextView pressure;
     ImageView currentImage;
 
     JsonTaskForCurrentWeather jsonTaskForCurrentWeather;
+    MainActivity mainActivity;
 
     public FragmentCurrentWeather() {
 
@@ -43,7 +45,8 @@ public class FragmentCurrentWeather extends Fragment {
 
         currentWeather = view.findViewById(R.id.tv_current_temperature);
         currentWeatherDescription = view.findViewById(R.id.tv_current_weather_description);
-        currentMinAndMax = view.findViewById(R.id.tv_min_and_max_current);
+        humidity = view.findViewById(R.id.humidity);
+        pressure = view.findViewById(R.id.pressure);
         currentImage = view.findViewById(R.id.img_weather_image);
 
 //        refreshCurrentWeatherData();
@@ -66,6 +69,10 @@ public class FragmentCurrentWeather extends Fragment {
         return view;
     }
 
+    public void setMainActivity(MainActivity mainActivity)
+    {
+        this.mainActivity = mainActivity;
+    }
 
     public void parseDataForCurrent()
     {
@@ -82,7 +89,8 @@ public class FragmentCurrentWeather extends Fragment {
 
         currentWeather.setText(cw.getTemperature()+ "°C");
         currentWeatherDescription.setText(cw.getWeatherText());
-        currentMinAndMax.setText(cw.getMinTemperature() + "°C/" + cw.getMaxTemperature()+ "°C");
+        humidity.setText("Humidity: " + cw.getHumidity() + "%");
+        pressure.setText("Pressure: " + cw.getPressure() + "mb");
         currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(cw.getIcon())));
     }
 
