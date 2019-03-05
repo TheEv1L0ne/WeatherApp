@@ -51,7 +51,7 @@ public class JSONParserForFiveDayForecastWeather {
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = format.parse(time);
-                String dayOfTheWeek = new SimpleDateFormat("EE").format(date);
+                String dayOfTheWeek = new SimpleDateFormat("EEEE").format(date);
                 String dayOfTheWeek1 = new SimpleDateFormat("dd").format(date);
 
                 int day = Integer.parseInt(dayOfTheWeek1);
