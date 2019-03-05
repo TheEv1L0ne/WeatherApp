@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 searchDialog.setVisibility(View.VISIBLE);
+                searchText.setText(""); //resets search field
 
             }
         });
@@ -251,6 +252,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void openSearchDialog()
+    {
+        searchDialog.setVisibility(View.VISIBLE);
+        searchText.setText(""); //resets search field
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;

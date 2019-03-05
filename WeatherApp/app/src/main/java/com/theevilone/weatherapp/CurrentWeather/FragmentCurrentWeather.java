@@ -60,7 +60,7 @@ public class FragmentCurrentWeather extends Fragment {
             Log.i("ToastLog", "Not First time here");
             CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
             CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
-            refreshCurrentWeatherData(currentWeather);
+            refreshCurrentWeatherData(true,currentWeather);
         }
 
         return view;
@@ -77,20 +77,32 @@ public class FragmentCurrentWeather extends Fragment {
             jsonTaskForCurrentWeather.startTask();
     }
 
-    public void refreshCurrentWeatherData(CurrentWeather cw)
+    public void refreshCurrentWeatherData(boolean tastInfo, CurrentWeather cw)
     {
 
-        //Storing data
-        CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
-        customSharedPreferences.putCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY, cw);
+        if(tastInfo) {
+            SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
 
-        mainActivity.setCityName(cw.getCityName());
+            //Storing data
+            CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+            customSharedPreferences.putCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY, cw);
 
-        currentWeather.setText(cw.getTemperature()+ "°C");
-        currentWeatherDescription.setText(cw.getWeatherText());
-        humidity.setText("Humidity: " + cw.getHumidity() + "%");
-        pressure.setText("Pressure: " + cw.getPressure() + "mb");
-        currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(cw.getIcon())));
+            mainActivity.setCityName(cw.getCityName());
+
+            if (selected == 0)
+                currentWeather.setText(cw.getTemperature() + "°C");
+            else
+                currentWeather.setText(cw.getTemperature() + "°F");
+            currentWeatherDescription.setText(cw.getWeatherText());
+            humidity.setText("Humidity: " + cw.getHumidity() + "%");
+            pressure.setText("Pressure: " + cw.getPressure() + "mb");
+            currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), getImage(cw.getIcon())));
+        }
+        else
+        {
+            mainActivity.openSearchDialog();
+        }
     }
 
     // (C *9/5)+32 = F

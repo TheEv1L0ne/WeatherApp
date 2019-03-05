@@ -89,8 +89,14 @@ public class FragmentFiveDayWeather extends Fragment {
         //Setting data into view
         for(int i=0;i<weatherDay.length;i++)
         {
+            SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+
             weatherDay[i].setText(fdw.getDay().get(i));
-            weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°C/"+fdw.getTemperatureMax().get(i)+ "°C");
+            if(selected == 0)
+                weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°C/"+fdw.getTemperatureMax().get(i)+ "°C");
+            else
+                weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°F/"+fdw.getTemperatureMax().get(i)+ "°F");
             weatherImage[i].setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(fdw.getImage().get(i))));
         }
     }

@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:text="-56°C"
+        android:text=""
         android:textColor="@color/colorPrimaryText"
         android:textSize="70sp" />
 
@@ -32,8 +32,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/image40" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tv_current_weather_description"
@@ -42,7 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_below="@id/line1"
-        android:text="SUNNY"
+        android:text=""
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
@@ -54,7 +53,7 @@
         android:gravity="center_horizontal|center_vertical"
         android:layout_centerInParent="true"
         android:layout_above="@id/pressure"
-        android:text="16°/8°"
+        android:text=""
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
@@ -67,7 +66,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="20dp"
-        android:text="16°/8°"
+        android:text=""
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 

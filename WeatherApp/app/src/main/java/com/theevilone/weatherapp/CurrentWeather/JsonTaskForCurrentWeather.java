@@ -145,7 +145,7 @@ public class JsonTaskForCurrentWeather {
                 JSONParserForCurrentWeather jsonParser = new JSONParserForCurrentWeather(result);
                 try {
                     CurrentWeather currentWeather = jsonParser.Parse();
-                    fragmentCurrentWeather.refreshCurrentWeatherData(currentWeather);
+                    fragmentCurrentWeather.refreshCurrentWeatherData(true, currentWeather);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -159,6 +159,8 @@ public class JsonTaskForCurrentWeather {
                 CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
                 CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
                 sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, currentWeather.getCityName()).apply();
+
+                fragmentCurrentWeather.refreshCurrentWeatherData(false, currentWeather);
 
                 Toast.makeText(MainActivity.staticMainActivity, "No city found!", Toast.LENGTH_LONG).show();
             }

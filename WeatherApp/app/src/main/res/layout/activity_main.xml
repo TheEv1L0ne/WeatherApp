@@ -38,7 +38,7 @@
                 android:layout_centerInParent="true"
                 android:textSize="25sp"
                 android:textColor="@color/colorPrimaryText"
-                android:text="Belgrade" />
+                android:text="" />
 
             <Button
                 android:id="@+id/btn_refresh_data"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Settings"
+                android:text="@string/settings"
                 android:textSize="30sp" />
 
             <View
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Temperature units:"
+                android:text="@string/temperature_units"
                 android:textSize="20sp" />
 
             <RelativeLayout
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_alignParentLeft="true"
-                    android:text="Celsius (°C):"
+                    android:text="@string/celsius_c"
                     android:textSize="20sp" />
 
                 <Switch
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_alignParentLeft="true"
-                    android:text="Fahrenheit (°F):"
+                    android:text="@string/fahrenheit_f"
                     android:textSize="20sp" />
 
                 <Switch
@@ -186,7 +186,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Ok" />
+                    android:text="@string/ok" />
 
                 <Button
                     android:id="@+id/btn_cancel"
@@ -196,7 +196,7 @@
                     android:layout_toLeftOf="@id/btn_ok"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Cancel" />
+                    android:text="@string/cancel" />
 
             </RelativeLayout>
 
@@ -231,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Search city"
+                android:text="@string/search_city"
                 android:textSize="30sp" />
 
             <View
@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Enter city name: "
+                android:text="@string/enter_city_name"
                 android:textSize="20sp" />
 
             <EditText
@@ -281,7 +281,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Search" />
+                    android:text="@string/search" />
 
                 <Button
                     android:id="@+id/btn_cancel_search"
@@ -291,7 +291,7 @@
                     android:layout_toLeftOf="@id/btn_search"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Cancel" />
+                    android:text="@string/cancel" />
 
             </RelativeLayout>
 
@@ -326,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Weather app"
+                android:text="@string/weather_app"
                 android:textSize="30sp" />
 
             <View
@@ -341,7 +341,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="Would you like to search temperature based on current city location?"
+                android:text="@string/would_you_like"
                 android:textSize="20sp" />
 
 
@@ -366,7 +366,7 @@
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Search" />
+                    android:text="@string/search" />
 
                 <Button
                     android:id="@+id/btn_no"
@@ -376,7 +376,7 @@
                     android:layout_toLeftOf="@id/btn_yes"
                     android:background="@drawable/rounded_button"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="Cancel" />
+                    android:text="@string/cancel" />
 
             </RelativeLayout>
 
