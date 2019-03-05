@@ -20,6 +20,7 @@ public class CustomSharedPreferences {
 
     public void putCurrentWeather(String key, CurrentWeather currentWeather) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key+"_cityName", currentWeather.getCityName());
         editor.putString(key + "_temperature", currentWeather.getTemperature());
         editor.putString(key + "_icon", currentWeather.getIcon());
         editor.putString(key + "_weatherText", currentWeather.getWeatherText());
@@ -31,6 +32,7 @@ public class CustomSharedPreferences {
     public CurrentWeather getCurrentWeather(String key) {
         CurrentWeather currentWeather = new CurrentWeather();
 
+        currentWeather.setCityName(sharedPreferences.getString(key + "_cityName", ""));
         currentWeather.setTemperature(sharedPreferences.getString(key + "_temperature", ""));
         currentWeather.setIcon(sharedPreferences.getString(key + "_icon", ""));
         currentWeather.setWeatherText(sharedPreferences.getString(key + "_weatherText", ""));

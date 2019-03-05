@@ -22,4 +22,6 @@ public class StaticStrings {
     //Settings
     public static String UNITS_SELECTED = "UNITS_SELECTED";
 
+    public static String CITY_TO_SEARCH = "CITY_TO_SEARCH";
+
 }

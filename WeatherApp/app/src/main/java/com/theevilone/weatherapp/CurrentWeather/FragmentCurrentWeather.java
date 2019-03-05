@@ -13,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
 import com.theevilone.weatherapp.HelperClasses.StaticStrings;
 import com.theevilone.weatherapp.MainActivity;
 import com.theevilone.weatherapp.R;
+
+import static com.theevilone.weatherapp.HelperClasses.HelperClass.isNetworkAvailable;
 
 public class FragmentCurrentWeather extends Fragment {
 
@@ -52,13 +55,7 @@ public class FragmentCurrentWeather extends Fragment {
 //        refreshCurrentWeatherData();
 
         SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
-        {
-            Log.i("ToastLog", "First time here");
-            parseDataForCurrent();
-            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT, 0).apply();
-        }
-        else
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == 0)
         {
             Log.i("ToastLog", "Not First time here");
             CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
@@ -76,8 +73,8 @@ public class FragmentCurrentWeather extends Fragment {
 
     public void parseDataForCurrent()
     {
-        jsonTaskForCurrentWeather = new JsonTaskForCurrentWeather(MainActivity.staticMainActivity, this);
-        jsonTaskForCurrentWeather.startTask();
+            jsonTaskForCurrentWeather = new JsonTaskForCurrentWeather(MainActivity.staticMainActivity, this);
+            jsonTaskForCurrentWeather.startTask();
     }
 
     public void refreshCurrentWeatherData(CurrentWeather cw)
@@ -86,6 +83,8 @@ public class FragmentCurrentWeather extends Fragment {
         //Storing data
         CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
         customSharedPreferences.putCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY, cw);
+
+        mainActivity.setCityName(cw.getCityName());
 
         currentWeather.setText(cw.getTemperature()+ "°C");
         currentWeatherDescription.setText(cw.getWeatherText());

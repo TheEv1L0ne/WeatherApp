@@ -1,18 +1,20 @@
 package com.theevilone.weatherapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -21,20 +23,22 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.theevilone.weatherapp.CurrentWeather.CurrentWeather;
 import com.theevilone.weatherapp.CurrentWeather.FragmentCurrentWeather;
 import com.theevilone.weatherapp.FiveDayForecastWeather.FragmentFiveDayWeather;
 import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
+import com.theevilone.weatherapp.HelperClasses.GPSTracker;
 import com.theevilone.weatherapp.HelperClasses.StaticStrings;
+
+import static com.theevilone.weatherapp.HelperClasses.HelperClass.isNetworkAvailable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    TabLayout tabLayout;
+    ViewPager viewPager;
 
 
-    private Button refreshWeatherData;
-    private Button settings;
+    Button refreshWeatherData;
+    Button settings;
 
     private FragmentCurrentWeather fragmentCurrentWeather;
     private FragmentFiveDayWeather fragmentFiveDayWeather;
@@ -58,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
     Button btnSearchOk;
     Button btnSearchCancel;
     EditText searchText;
+
+    //Frist time in app dialog
+    LinearLayout firstTimeDialog;
+    Button btnFirstOk;
+    Button btnFirstCancel;
 
 
     @Override
@@ -115,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
         btnSettingsOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parseData();
+
+                String cityName = sharedpreferences.getString(StaticStrings.CITY_TO_SEARCH, "");
+                if(!cityName.equalsIgnoreCase("") && isNetworkAvailable())
+                    parseData();
                 settingsDialog.setVisibility(View.GONE);
             }
         });
@@ -203,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     searchDialog.setVisibility(View.GONE);
+                    sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, searchText.getText().toString()).apply();
                     parseData();
                 }
             }
@@ -210,18 +223,140 @@ public class MainActivity extends AppCompatActivity {
 
         searchText = findViewById(R.id.et_search_city_name);
 
+        firstTimeDialog = findViewById(R.id.dialog_first_time_in_app);
+        btnFirstOk = findViewById(R.id.btn_yes);
+        btnFirstCancel = findViewById(R.id.btn_no);
+
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
+        {
+            Log.i("ToastLog", "First time here");
+            firstTimeDialog.setVisibility(View.VISIBLE);
+
+        }
+
+        btnFirstCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firstTimeDialog.setVisibility(View.GONE);
+                sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
+                sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
+            }
+        });
+
+        btnFirstOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkLocationPermission();
+                firstTimeDialog.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("21321")
+                        .setMessage("432432")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+//                        locationManager.requestLocationUpdates(provider, 400, 1, this);
+
+                        GPSTracker gps = new GPSTracker(this);
+                        double latitude = gps.getLatitude();
+                        double longitude = gps.getLongitude();
+
+                        Log.i("latitude", String.valueOf(latitude));
+                        Log.i("longitude", String.valueOf(longitude));
+
+                        sharedpreferences.edit().putString("LAT", String.valueOf(latitude)).apply();
+                        sharedpreferences.edit().putString("LON", String.valueOf(longitude)).apply();
+
+                        parseData();
+                    }
+
+                } else {
+
+                    //User didn't grant permission... make sure that location dialog doesn't show again
+                    sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
+                    sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
+                }
+                return;
+            }
+
+        }
     }
 
 
     public void setCityName(String name)
     {
         cityName.setText(name);
+        sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, name).apply();
     }
 
     public void parseData()
     {
-        fragmentCurrentWeather.parseDataForCurrent();
-        fragmentFiveDayWeather.parseDataForFiveDaysForcast();
+        if(isNetworkAvailable()) {
+            fragmentCurrentWeather.parseDataForCurrent();
+            fragmentFiveDayWeather.parseDataForFiveDaysForcast();
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this, "No internet connection", Toast.LENGTH_LONG).show();
+        }
     }
+
+
 
 }

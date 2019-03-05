@@ -16,6 +16,7 @@ public class JSONParserForCurrentWeather {
 
     public CurrentWeather Parse() throws JSONException {
         JSONObject jObject = new JSONObject(jsonString);
+        String cityName = jObject.getString("name");
         String aJsonString = jObject.getString("main");
         Log.i("JSONLOG", aJsonString);
 
@@ -51,6 +52,7 @@ public class JSONParserForCurrentWeather {
         Log.i("JSONLOG", description);
 
         CurrentWeather currentWeather = new CurrentWeather();
+        currentWeather.setCityName(cityName);
         currentWeather.setTemperature(temp);
         currentWeather.setIcon(icon);
         currentWeather.setHumidity(humidity);

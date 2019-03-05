@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 
+import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
 import com.theevilone.weatherapp.HelperClasses.StaticStrings;
 import com.theevilone.weatherapp.MainActivity;
 
@@ -39,15 +41,32 @@ public class JsonTaskForCurrentWeather {
     {
         //URL EXAMPLE: "http://api.openweathermap.org/data/2.5/weather?q=Belgrade&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb"
 
-        sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         String apiUrl = "";
-        int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
-        if(selected == 0)
-            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + "Belgrade" + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
-        else
-            apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + "Belgrade" + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" +StaticStrings.API_KEY;
+
+        error = false;
+
+        sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
+        {
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
+            //api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+            apiUrl = "http://api.openweathermap.org/data/2.5/weather?lat=" + sharedpreferences.getString("LAT", "") +"&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
+        }
+        else {
+
+            String cityName = sharedpreferences.getString(StaticStrings.CITY_TO_SEARCH, "");
+
+            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+            if (selected == 0)
+                apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + cityName + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" + StaticStrings.API_KEY;
+            else
+                apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + cityName + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" + StaticStrings.API_KEY;
+        }
         new JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  apiUrl);
     }
+
+    private boolean error = false;
 
     private class JsonTask extends AsyncTask<String, String, String> {
 
@@ -89,8 +108,10 @@ public class JsonTaskForCurrentWeather {
                 return buffer.toString();
 
             } catch (MalformedURLException e) {
+                Log.i("MalformedURLException", "   ");
                 e.printStackTrace();
             } catch (IOException e) {
+                error = true;
                 e.printStackTrace();
             } finally {
                 if (connection != null) {
@@ -114,19 +135,32 @@ public class JsonTaskForCurrentWeather {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            if(result!=null)
-                if (pd.isShowing()){
-                    pd.dismiss();
-                }
-            if(result!=null)
+            if(result!=null && error == false) {
                 Log.i("RESSULTT", result);
 
-            JSONParserForCurrentWeather jsonParser = new JSONParserForCurrentWeather(result);
-            try {
-                CurrentWeather currentWeather = jsonParser.Parse();
-                fragmentCurrentWeather.refreshCurrentWeatherData(currentWeather);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                if (pd.isShowing()) {
+                    pd.dismiss();
+                }
+
+                JSONParserForCurrentWeather jsonParser = new JSONParserForCurrentWeather(result);
+                try {
+                    CurrentWeather currentWeather = jsonParser.Parse();
+                    fragmentCurrentWeather.refreshCurrentWeatherData(currentWeather);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                if (pd.isShowing()) {
+                    pd.dismiss();
+                }
+
+                CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
+                CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
+                sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, currentWeather.getCityName()).apply();
+
+                Toast.makeText(MainActivity.staticMainActivity, "No city found!", Toast.LENGTH_LONG).show();
             }
 
 

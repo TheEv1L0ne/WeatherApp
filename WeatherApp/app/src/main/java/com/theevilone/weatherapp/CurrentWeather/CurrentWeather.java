@@ -2,6 +2,7 @@ package com.theevilone.weatherapp.CurrentWeather;
 
 public class CurrentWeather {
 
+    private String cityName;
     private String temperature;
     private String icon;
     private String weatherText;
@@ -12,6 +13,14 @@ public class CurrentWeather {
 
 
     public CurrentWeather() {
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getTemperature() {

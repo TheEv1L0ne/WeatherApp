@@ -301,4 +301,89 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/dialog_first_time_in_app"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparentBlack"
+        android:clickable="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="gone"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_round"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_first_time_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Weather app"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/tv_search_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Would you like to search temperature based on current city location?"
+                android:textSize="20sp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorPrimary" />
+
+            <RelativeLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <Button
+                    android:id="@+id/btn_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="@color/colorPrimaryText"
+                    android:text="Search" />
+
+                <Button
+                    android:id="@+id/btn_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/btn_yes"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="@color/colorPrimaryText"
+                    android:text="Cancel" />
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

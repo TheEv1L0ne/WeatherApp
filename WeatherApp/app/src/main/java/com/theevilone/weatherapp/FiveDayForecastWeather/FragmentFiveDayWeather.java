@@ -62,13 +62,7 @@ public class FragmentFiveDayWeather extends Fragment {
         weatherTemperature[4] = view.findViewById(R.id.tv_temperature5);
 
         SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,-1) == -1)
-        {
-            Log.i("ToastLog", "First time here");
-            parseDataForFiveDaysForcast();
-            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY, 0).apply();
-        }
-        else
+        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,-1) == 0)
         {
             Log.i("ToastLog", "Not First time here");
             CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
