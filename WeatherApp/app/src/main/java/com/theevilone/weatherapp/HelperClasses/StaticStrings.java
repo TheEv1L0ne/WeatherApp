@@ -24,4 +24,6 @@ public class StaticStrings {
 
     public static String CITY_TO_SEARCH = "CITY_TO_SEARCH";
 
+    public static String LAST_TIME_REFRESHED = "LAST_TIME_REFRESHED";
+
 }

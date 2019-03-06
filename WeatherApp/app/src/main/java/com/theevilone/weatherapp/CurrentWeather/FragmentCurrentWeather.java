@@ -90,14 +90,16 @@ public class FragmentCurrentWeather extends Fragment {
 
             mainActivity.setCityName(cw.getCityName());
 
-            if (selected == 0)
-                currentWeather.setText(cw.getTemperature() + "°C");
-            else
-                currentWeather.setText(cw.getTemperature() + "°F");
-            currentWeatherDescription.setText(cw.getWeatherText());
-            humidity.setText("Humidity: " + cw.getHumidity() + "%");
-            pressure.setText("Pressure: " + cw.getPressure() + "mb");
-            currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), getImage(cw.getIcon())));
+            if(!cw.getTemperature().equals("")) { //checking if there is data to show
+                if (selected == 0)
+                    currentWeather.setText(cw.getTemperature() + "°C");
+                else
+                    currentWeather.setText(cw.getTemperature() + "°F");
+                currentWeatherDescription.setText(cw.getWeatherText());
+                humidity.setText("Humidity: " + cw.getHumidity() + "%");
+                pressure.setText("Pressure: " + cw.getPressure() + "mb");
+                currentImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), getImage(cw.getIcon())));
+            }
         }
         else
         {

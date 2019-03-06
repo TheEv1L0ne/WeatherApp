@@ -87,17 +87,18 @@ public class FragmentFiveDayWeather extends Fragment {
         customSharedPreferences.putFiveDayForecastWeather(StaticStrings.FIVE_DAY_WEATHER_DATA_KEY, fdw);
 
         //Setting data into view
-        for(int i=0;i<weatherDay.length;i++)
-        {
-            SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+        if(fdw.getDay().size() != 0) { // checking if there is data to show
+            for (int i = 0; i < weatherDay.length; i++) {
+                SharedPreferences sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
 
-            weatherDay[i].setText(fdw.getDay().get(i));
-            if(selected == 0)
-                weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°C/"+fdw.getTemperatureMax().get(i)+ "°C");
-            else
-                weatherTemperature[i].setText(fdw.getTemperatureMin().get(i)+ "°F/"+fdw.getTemperatureMax().get(i)+ "°F");
-            weatherImage[i].setImageDrawable(ContextCompat.getDrawable(getActivity(),getImage(fdw.getImage().get(i))));
+                weatherDay[i].setText(fdw.getDay().get(i));
+                if (selected == 0)
+                    weatherTemperature[i].setText(fdw.getTemperatureMin().get(i) + "°C/" + fdw.getTemperatureMax().get(i) + "°C");
+                else
+                    weatherTemperature[i].setText(fdw.getTemperatureMin().get(i) + "°F/" + fdw.getTemperatureMax().get(i) + "°F");
+                weatherImage[i].setImageDrawable(ContextCompat.getDrawable(getActivity(), getImage(fdw.getImage().get(i))));
+            }
         }
     }
 

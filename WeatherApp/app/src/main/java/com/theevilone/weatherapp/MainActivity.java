@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.theevilone.weatherapp.CurrentWeather.FragmentCurrentWeather;
 import com.theevilone.weatherapp.FiveDayForecastWeather.FragmentFiveDayWeather;
 import com.theevilone.weatherapp.HelperClasses.CustomSharedPreferences;
 import com.theevilone.weatherapp.HelperClasses.GPSTracker;
+import com.theevilone.weatherapp.HelperClasses.MultiSwipeRefreshLayout;
 import com.theevilone.weatherapp.HelperClasses.StaticStrings;
 
 import static com.theevilone.weatherapp.HelperClasses.HelperClass.isNetworkAvailable;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
+    ViewPager.OnPageChangeListener mOnPageChangeListener;
 
     Button refreshWeatherData;
     Button settings;
@@ -252,7 +255,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //Refreshes data when wiped down
+        mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            //Disables refresh down while swiping left or right
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (pullToRefresh != null) {
+                    pullToRefresh.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
+                }
+            }
+        };
+
+        viewPager.addOnPageChangeListener(mOnPageChangeListener);
+        
+        pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setSwipeableChildren(R.id.viewpager_id,R.id.tabs);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                parseData();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
     }
+
+    MultiSwipeRefreshLayout pullToRefresh;
 
     public void openSearchDialog()
     {
@@ -355,6 +393,9 @@ public class MainActivity extends AppCompatActivity {
     public void parseData()
     {
         if(isNetworkAvailable()) {
+
+            long time= System.currentTimeMillis();
+            sharedpreferences.edit().putString(StaticStrings.LAST_TIME_REFRESHED, String.valueOf(time)).apply();
             fragmentCurrentWeather.parseDataForCurrent();
             fragmentFiveDayWeather.parseDataForFiveDaysForcast();
         }
@@ -364,6 +405,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
 
+        //Auto Refresh Data if data didn't refreshed in last 30 min
+        long currentTime= System.currentTimeMillis();
+        long time = Long.valueOf(sharedpreferences.getString(StaticStrings.LAST_TIME_REFRESHED, "0"));
+        if(currentTime - time >= 1800000 && time != 0)
+        {
+            parseData();
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (viewPager != null) {
+            viewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        }
+    }
 }

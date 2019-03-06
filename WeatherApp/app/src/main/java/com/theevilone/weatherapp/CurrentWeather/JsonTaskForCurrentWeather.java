@@ -73,10 +73,10 @@ public class JsonTaskForCurrentWeather {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(activityInstance);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
+//            pd = new ProgressDialog(activityInstance);
+//            pd.setMessage("Please wait");
+//            pd.setCancelable(false);
+//            pd.show();
         }
 
         protected String doInBackground(String... params) {
@@ -138,9 +138,9 @@ public class JsonTaskForCurrentWeather {
             if(result!=null && error == false) {
                 Log.i("RESSULTT", result);
 
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
+//                if (pd.isShowing()) {
+//                    pd.dismiss();
+//                }
 
                 JSONParserForCurrentWeather jsonParser = new JSONParserForCurrentWeather(result);
                 try {
@@ -152,9 +152,9 @@ public class JsonTaskForCurrentWeather {
             }
             else
             {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
+//                if (pd.isShowing()) {
+//                    pd.dismiss();
+//                }
 
                 CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
                 CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
