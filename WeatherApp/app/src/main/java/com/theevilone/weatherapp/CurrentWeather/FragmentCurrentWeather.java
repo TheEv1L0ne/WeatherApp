@@ -107,18 +107,6 @@ public class FragmentCurrentWeather extends Fragment {
         }
     }
 
-    // (C *9/5)+32 = F
-    public void convertCtoF()
-    {
-
-        //FINISH THIS
-
-        CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
-        CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);
-
-        currentWeather.setTemperature(currentWeather.getTemperature());
-    }
-
     private int getImage(String imageCode)
     {
         int imageDecoded = 0;
