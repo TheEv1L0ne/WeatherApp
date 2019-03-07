@@ -50,6 +50,16 @@
                     android:text="" />
 
                 <Button
+                    android:id="@+id/location_search"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_toLeftOf="@id/btn_refresh_data"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/maps" />
+
+                <Button
                     android:id="@+id/btn_refresh_data"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -253,6 +263,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/colorPrimary" />
+
 
             <TextView
                 android:id="@+id/tv_city_text"

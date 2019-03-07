@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnSearchCancel;
     AutoCompleteTextView searchText;
     LinearLayout searchMainDialog;
+    Button searchByLocation;
 
     //Frist time in app dialog
     LinearLayout firstTimeDialog;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                settingsDialog.setVisibility(View.VISIBLE);
-                openDialogWithAnimation(settingsDialog,settingsDialogMain);
+                openDialogWithAnimation(settingsDialog,settingsDialog);
                 settingsOpen = true;
 
             }
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                settingsDialog.setVisibility(View.GONE);
-                closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+                closeDialogWithAnimation(settingsDialog,settingsDialog);
                 settingsOpen = false;
             }
         });
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!cityName.equalsIgnoreCase("") && isNetworkAvailable())
                     parseData();
 //                settingsDialog.setVisibility(View.GONE);
-                closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+                closeDialogWithAnimation(settingsDialog,settingsDialog);
                 settingsOpen = false;
             }
         });
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 //                searchDialog.setVisibility(View.VISIBLE);
-                openDialogWithAnimation(searchDialog,searchMainDialog);
+                openDialogWithAnimation(searchDialog,searchDialog);
                 searchText.setText(""); //resets search field
                 searchOpen = true;
 
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Virtual keyboard must be called before closing view
 //                searchDialog.setVisibility(View.GONE);
-                closeDialogWithAnimation(searchDialog,searchMainDialog);
+                closeDialogWithAnimation(searchDialog,searchDialog);
                 searchOpen = false;
 
             }
@@ -270,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
 //                    searchDialog.setVisibility(View.GONE);
-                    closeDialogWithAnimation(searchDialog,searchMainDialog);
+                    closeDialogWithAnimation(searchDialog,searchDialog);
                     sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, searchText.getText().toString()).apply();
                     parseData();
                     searchOpen = false;
@@ -280,6 +281,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        searchByLocation = findViewById(R.id.location_search);
+        searchByLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1).apply();
+                sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,-1).apply();
+                openDialogWithAnimation(firstTimeDialog, firstTimeDialog);
+                firstOpen = true;
+            }
+        });
+
+        ///SEARCH - END
 //        searchText = findViewById(R.id.et_search_city_name);
 
         firstTimeDialog = findViewById(R.id.dialog_first_time_in_app);
@@ -293,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.i("ToastLog", "First time here");
 //            firstTimeDialog.setVisibility(View.VISIBLE);
-            openDialogWithAnimation(firstTimeDialog, firstDialog);
+            openDialogWithAnimation(firstTimeDialog, firstTimeDialog);
             firstOpen = true;
 
         }
@@ -302,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                firstTimeDialog.setVisibility(View.GONE);
-                closeDialogWithAnimation(firstTimeDialog, firstDialog);
+                closeDialogWithAnimation(firstTimeDialog, firstTimeDialog);
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
                 firstOpen = false;
@@ -313,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkLocationPermission();
-                closeDialogWithAnimation(firstTimeDialog, firstDialog);
+                closeDialogWithAnimation(firstTimeDialog, firstTimeDialog);
 //                firstTimeDialog.setVisibility(View.GONE);
                 firstOpen = false;
             }
@@ -363,8 +376,8 @@ public class MainActivity extends AppCompatActivity {
                 (this,android.R.layout.simple_list_item_1,countries);
         searchText.setAdapter(adapter1);
 
-        
 
+        //Closes system keyboard on item selected from list
         searchText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -387,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
     public void openSearchDialog()
     {
 //        searchDialog.setVisibility(View.VISIBLE);
-        openDialogWithAnimation(searchDialog,searchMainDialog);
+        openDialogWithAnimation(searchDialog,searchDialog);
         searchOpen = true;
         searchText.setText(""); //resets search field
     }
@@ -430,6 +443,22 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         } else {
+            Log.i("LOCATION_SERACH", "VEC IMA PERMISIJU PERMISIJU");
+
+
+            GPSTracker gps = new GPSTracker(this);
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            Log.i("latitude", String.valueOf(latitude));
+            Log.i("longitude", String.valueOf(longitude));
+
+            sharedpreferences.edit().putString("LAT", String.valueOf(latitude)).apply();
+            sharedpreferences.edit().putString("LON", String.valueOf(longitude)).apply();
+
+            parseData();
+
+
             return true;
         }
     }
@@ -443,12 +472,14 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    Log.i("LOCATION_SERACH", "DAO PERMISIJU");
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
+                        Log.i("LOCATION_SERACH", "DAO PERMISIJU 123");
                         //Request location updates:
 //                        locationManager.requestLocationUpdates(provider, 400, 1, this);
 
@@ -467,6 +498,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
+                    Log.i("LOCATION_SERACH", "NIJE DAO PERMISIJU");
                     //User didn't grant permission... make sure that location dialog doesn't show again
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
@@ -530,7 +562,7 @@ public class MainActivity extends AppCompatActivity {
     {
         isOpening = true;
         root.setVisibility(View.VISIBLE);
-        animation = AnimationUtils.loadAnimation(this, R.anim.scale_in);
+        animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         animatedDialog.startAnimation(animation);
     }
 
@@ -539,7 +571,7 @@ public class MainActivity extends AppCompatActivity {
     {
         isOpening = false;
         final Handler handler = new Handler();
-        animation = AnimationUtils.loadAnimation(this, R.anim.scale_out);
+        animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
         animatedDialog.startAnimation(animation);
         handler.postDelayed(new Runnable() {
             @Override
@@ -559,13 +591,15 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         if (settingsOpen) {
-            closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+            closeDialogWithAnimation(settingsDialog,settingsDialog);
             settingsOpen = false;
         } else if (searchOpen) {
-            closeDialogWithAnimation(searchDialog,searchMainDialog);
+            closeDialogWithAnimation(searchDialog,searchDialog);
             searchOpen = false;
         } else if (firstOpen) {
-            closeDialogWithAnimation(firstTimeDialog, firstDialog);
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
+            closeDialogWithAnimation(firstTimeDialog, firstTimeDialog);
             firstOpen = false;
         } else {
             if (doubleBackToExitPressedOnce) {
