@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,14 +15,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Settings dialog
     LinearLayout settingsDialog;
+    LinearLayout settingsDialogMain;
     Button btnSettingsCancel;
     Button btnSettingsOk;
     private Switch celsiusCheckBox;
@@ -68,12 +74,21 @@ public class MainActivity extends AppCompatActivity {
     Button btnSearchOk;
     Button btnSearchCancel;
     AutoCompleteTextView searchText;
+    LinearLayout searchMainDialog;
 
     //Frist time in app dialog
     LinearLayout firstTimeDialog;
     Button btnFirstOk;
     Button btnFirstCancel;
+    LinearLayout firstDialog;
 
+    ///
+    boolean settingsOpen = false;
+    boolean searchOpen = false;
+    boolean firstOpen = false;
+
+    //Animation
+    Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +123,15 @@ public class MainActivity extends AppCompatActivity {
         //SETTINGS - START
 
         settingsDialog = findViewById(R.id.dialog_settings);
+        settingsDialogMain = findViewById(R.id.dialog_settings_main);
 
         settings = findViewById(R.id.btn_settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingsDialog.setVisibility(View.VISIBLE);
+//                settingsDialog.setVisibility(View.VISIBLE);
+                openDialogWithAnimation(settingsDialog,settingsDialogMain);
+                settingsOpen = true;
 
             }
         });
@@ -122,7 +140,9 @@ public class MainActivity extends AppCompatActivity {
         btnSettingsCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                settingsDialog.setVisibility(View.GONE);
+//                settingsDialog.setVisibility(View.GONE);
+                closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+                settingsOpen = false;
             }
         });
 
@@ -134,7 +154,9 @@ public class MainActivity extends AppCompatActivity {
                 String cityName = sharedpreferences.getString(StaticStrings.CITY_TO_SEARCH, "");
                 if(!cityName.equalsIgnoreCase("") && isNetworkAvailable())
                     parseData();
-                settingsDialog.setVisibility(View.GONE);
+//                settingsDialog.setVisibility(View.GONE);
+                closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+                settingsOpen = false;
             }
         });
 
@@ -190,14 +212,17 @@ public class MainActivity extends AppCompatActivity {
         //SEARCH - START
 
         searchDialog = findViewById(R.id.dialog_choose_city);
+        searchMainDialog = findViewById(R.id.dialog_choose_main);
 
         refreshWeatherData = findViewById(R.id.btn_refresh_data);
         refreshWeatherData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                searchDialog.setVisibility(View.VISIBLE);
+//                searchDialog.setVisibility(View.VISIBLE);
+                openDialogWithAnimation(searchDialog,searchMainDialog);
                 searchText.setText(""); //resets search field
+                searchOpen = true;
 
             }
         });
@@ -216,7 +241,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Virtual keyboard must be called before closing view
-                searchDialog.setVisibility(View.GONE);
+//                searchDialog.setVisibility(View.GONE);
+                closeDialogWithAnimation(searchDialog,searchMainDialog);
+                searchOpen = false;
 
             }
         });
@@ -242,9 +269,11 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 }
                 else {
-                    searchDialog.setVisibility(View.GONE);
+//                    searchDialog.setVisibility(View.GONE);
+                    closeDialogWithAnimation(searchDialog,searchMainDialog);
                     sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, searchText.getText().toString()).apply();
                     parseData();
+                    searchOpen = false;
                 }
 
 
@@ -257,19 +286,26 @@ public class MainActivity extends AppCompatActivity {
         btnFirstOk = findViewById(R.id.btn_yes);
         btnFirstCancel = findViewById(R.id.btn_no);
 
+        firstDialog = findViewById(R.id.first_dialog);
+
+
         if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
         {
             Log.i("ToastLog", "First time here");
-            firstTimeDialog.setVisibility(View.VISIBLE);
+//            firstTimeDialog.setVisibility(View.VISIBLE);
+            openDialogWithAnimation(firstTimeDialog, firstDialog);
+            firstOpen = true;
 
         }
 
         btnFirstCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firstTimeDialog.setVisibility(View.GONE);
+//                firstTimeDialog.setVisibility(View.GONE);
+                closeDialogWithAnimation(firstTimeDialog, firstDialog);
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
+                firstOpen = false;
             }
         });
 
@@ -277,7 +313,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkLocationPermission();
-                firstTimeDialog.setVisibility(View.GONE);
+                closeDialogWithAnimation(firstTimeDialog, firstDialog);
+//                firstTimeDialog.setVisibility(View.GONE);
+                firstOpen = false;
             }
         });
 
@@ -325,6 +363,22 @@ public class MainActivity extends AppCompatActivity {
                 (this,android.R.layout.simple_list_item_1,countries);
         searchText.setAdapter(adapter1);
 
+        
+
+        searchText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                    long id) {
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+            }
+        });
+
     }
 
 
@@ -332,7 +386,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void openSearchDialog()
     {
-        searchDialog.setVisibility(View.VISIBLE);
+//        searchDialog.setVisibility(View.VISIBLE);
+        openDialogWithAnimation(searchDialog,searchMainDialog);
+        searchOpen = true;
         searchText.setText(""); //resets search field
     }
 
@@ -463,6 +519,70 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (viewPager != null) {
             viewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        }
+    }
+
+    ///ANIMATIONS - START
+
+    boolean isOpening = false;
+
+    public void openDialogWithAnimation(View root, View animatedDialog)
+    {
+        isOpening = true;
+        root.setVisibility(View.VISIBLE);
+        animation = AnimationUtils.loadAnimation(this, R.anim.scale_in);
+        animatedDialog.startAnimation(animation);
+    }
+
+
+    public void closeDialogWithAnimation(final View root, View animatedDialog)
+    {
+        isOpening = false;
+        final Handler handler = new Handler();
+        animation = AnimationUtils.loadAnimation(this, R.anim.scale_out);
+        animatedDialog.startAnimation(animation);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!isOpening)
+                    root.setVisibility(View.GONE);
+            }
+        }, 200);
+    }
+
+    ///ANIMATIONS  - END
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    //BACK PRESSED SO USER MUST PRESS TWICE TO EXIT
+    @Override
+    public void onBackPressed() {
+
+        if (settingsOpen) {
+            closeDialogWithAnimation(settingsDialog,settingsDialogMain);
+            settingsOpen = false;
+        } else if (searchOpen) {
+            closeDialogWithAnimation(searchDialog,searchMainDialog);
+            searchOpen = false;
+        } else if (firstOpen) {
+            closeDialogWithAnimation(firstTimeDialog, firstDialog);
+            firstOpen = false;
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
     }
 }

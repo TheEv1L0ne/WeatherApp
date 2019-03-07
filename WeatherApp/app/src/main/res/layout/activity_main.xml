@@ -100,6 +100,7 @@
         android:focusable="true">
 
         <LinearLayout
+            android:id="@+id/dialog_settings_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_round"
@@ -232,6 +233,7 @@
         android:visibility="gone">
 
         <LinearLayout
+            android:id="@+id/dialog_choose_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_round"
@@ -326,6 +328,7 @@
         android:focusable="true">
 
         <LinearLayout
+            android:id="@+id/first_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/dialog_round"
