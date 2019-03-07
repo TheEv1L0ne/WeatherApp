@@ -16,6 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout searchDialog;
     Button btnSearchOk;
     Button btnSearchCancel;
-    EditText searchText;
+    AutoCompleteTextView searchText;
 
     //Frist time in app dialog
     LinearLayout firstTimeDialog;
@@ -203,7 +206,18 @@ public class MainActivity extends AppCompatActivity {
         btnSearchCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Closes virtual keyboard
+                searchText.clearFocus();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                //Virtual keyboard must be called before closing view
                 searchDialog.setVisibility(View.GONE);
+
             }
         });
 
@@ -212,6 +226,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                //Closes virtual keyboard
+                searchText.clearFocus();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                //Virtual keyboard must be called before closing view
                 if(searchText.getText().toString().isEmpty())
                 {
                     Toast.makeText(MainActivity.this, "Please enter city name!",
@@ -222,10 +246,12 @@ public class MainActivity extends AppCompatActivity {
                     sharedpreferences.edit().putString(StaticStrings.CITY_TO_SEARCH, searchText.getText().toString()).apply();
                     parseData();
                 }
+
+
             }
         });
 
-        searchText = findViewById(R.id.et_search_city_name);
+//        searchText = findViewById(R.id.et_search_city_name);
 
         firstTimeDialog = findViewById(R.id.dialog_first_time_in_app);
         btnFirstOk = findViewById(R.id.btn_yes);
@@ -276,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
-        
+
         pullToRefresh = findViewById(R.id.pullToRefresh);
         pullToRefresh.setSwipeableChildren(R.id.viewpager_id,R.id.tabs);
 
@@ -288,7 +314,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        searchText = (AutoCompleteTextView) findViewById(R.id.et_search_city_name);
+
+//        String[] countries = getResources().getStringArray(R.array.list_of_countries);
+        int resId = getResources().getIdentifier("list_of_countries", "array", this.getPackageName());
+        String[] countries = getResources().getStringArray(resId);
+        Log.i("AKJFK", String.valueOf(countries.length));
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>
+                (this,android.R.layout.simple_list_item_1,countries);
+        searchText.setAdapter(adapter1);
+
     }
+
 
     MultiSwipeRefreshLayout pullToRefresh;
 

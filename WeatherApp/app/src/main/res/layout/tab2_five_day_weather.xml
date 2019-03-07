@@ -25,8 +25,8 @@
 
         <ImageView
             android:id="@+id/img_icon1"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
              />
 
@@ -61,8 +61,8 @@
 
         <ImageView
             android:id="@+id/img_icon2"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
              />
 
@@ -119,8 +119,8 @@
 
         <ImageView
             android:id="@+id/img_icon3"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             />
 
@@ -165,8 +165,8 @@
 
         <ImageView
             android:id="@+id/img_icon4"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
              />
 
@@ -211,8 +211,8 @@
 
         <ImageView
             android:id="@+id/img_icon5"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true" />
 
         <TextView

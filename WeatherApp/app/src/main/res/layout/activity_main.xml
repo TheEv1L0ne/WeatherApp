@@ -43,6 +43,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:textSize="25sp"
+                    android:maxLines="1"
+                    android:maxLength="15"
+                    android:ellipsize="end"
                     android:textColor="@color/colorPrimaryText"
                     android:text="" />
 
@@ -221,12 +224,12 @@
         android:layout_height="match_parent"
         android:background="@color/transparentBlack"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="gone"
-        android:focusable="true">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -238,8 +241,8 @@
                 android:id="@+id/tv_choose_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/search_city"
                 android:textSize="30sp" />
 
@@ -253,21 +256,21 @@
                 android:id="@+id/tv_city_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/enter_city_name"
                 android:textSize="20sp" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_search_city_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="city" />
-
+                android:ems="10"
+                android:hint="@string/enter_city_name"
+                android:inputType="textPersonName" />
 
             <View
                 android:layout_width="match_parent"
@@ -289,8 +292,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rounded_button"
-                    android:textColor="@color/colorPrimaryText"
-                    android:text="@string/search" />
+                    android:text="@string/search"
+                    android:textColor="@color/colorPrimaryText" />
 
                 <Button
                     android:id="@+id/btn_cancel_search"
@@ -299,11 +302,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/btn_search"
                     android:background="@drawable/rounded_button"
-                    android:textColor="@color/colorPrimaryText"
-                    android:text="@string/cancel" />
+                    android:text="@string/cancel"
+                    android:textColor="@color/colorPrimaryText" />
 
             </RelativeLayout>
-
 
 
         </LinearLayout>
