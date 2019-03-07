@@ -34,7 +34,7 @@ public class JsonTaskForFiveDayForecastWeather {
 
     SharedPreferences sharedpreferences;
 
-    public JsonTaskForFiveDayForecastWeather( Activity activityInstance, FragmentFiveDayWeather fragmentFiveDayWeather) {
+    public JsonTaskForFiveDayForecastWeather(Activity activityInstance, FragmentFiveDayWeather fragmentFiveDayWeather) {
         this.activityInstance = activityInstance;
         this.fragmentFiveDayWeather = fragmentFiveDayWeather;
     }
@@ -43,33 +43,34 @@ public class JsonTaskForFiveDayForecastWeather {
 
     private boolean error = false;
 
-    public void startTask()
-    {
+    public void startTask() {
 
         error = false;
 
         sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
+        int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+
         String apiUrl = "";
-        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,-1) == -1)
-        {
-            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
+        if (sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY, -1) == -1) {
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY, 0).apply();
             //api.openweathermap.org/data/2.5/weather?lat=35&lon=139
-            apiUrl = "http://api.openweathermap.org/data/2.5/forecast?lat=" + sharedpreferences.getString("LAT", "") +"&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
-        }
-        else {
+            if (selected == 0)
+                apiUrl = "http://api.openweathermap.org/data/2.5/forecast?lat=" + sharedpreferences.getString("LAT", "") + "&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" + StaticStrings.API_KEY;
+            else
+                apiUrl = "http://api.openweathermap.org/data/2.5/forecast?lat=" + sharedpreferences.getString("LAT", "") + "&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" + StaticStrings.API_KEY;
+
+        } else {
 
             String cityName = sharedpreferences.getString(StaticStrings.CITY_TO_SEARCH, "");
 
-
-            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
             if (selected == 0)
                 apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_FORECAST + cityName + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" + StaticStrings.API_KEY;
             else
                 apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_FORECAST + cityName + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" + StaticStrings.API_KEY;
         }
 
-        new JsonTaskForFiveDayForecastWeather.JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  apiUrl);
+        new JsonTaskForFiveDayForecastWeather.JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, apiUrl);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
@@ -104,7 +105,7 @@ public class JsonTaskForFiveDayForecastWeather {
                 is = connection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line = null;
-                while (  (line = br.readLine()) != null )
+                while ((line = br.readLine()) != null)
                     buffer.append(line + "\r\n");
 
                 is.close();
@@ -133,7 +134,6 @@ public class JsonTaskForFiveDayForecastWeather {
         }
 
 
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -144,7 +144,7 @@ public class JsonTaskForFiveDayForecastWeather {
 //                }
 
 
-            if(result!=null & error == false) {
+            if (result != null & error == false) {
                 Log.i("RESSULTT", result);
 
                 JSONParserForFiveDayForecastWeather jsonParser = new JSONParserForFiveDayForecastWeather(result);
@@ -154,9 +154,7 @@ public class JsonTaskForFiveDayForecastWeather {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
+            } else {
 //                if (pd.isShowing()) {
 //                    pd.dismiss();
 //                }

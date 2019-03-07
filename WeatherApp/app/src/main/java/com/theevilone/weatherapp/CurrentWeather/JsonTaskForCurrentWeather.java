@@ -30,15 +30,14 @@ public class JsonTaskForCurrentWeather {
 
     SharedPreferences sharedpreferences;
 
-    public JsonTaskForCurrentWeather( Activity activityInstance, FragmentCurrentWeather fragmentCurrentWeather) {
+    public JsonTaskForCurrentWeather(Activity activityInstance, FragmentCurrentWeather fragmentCurrentWeather) {
         this.activityInstance = activityInstance;
         this.fragmentCurrentWeather = fragmentCurrentWeather;
     }
 
     ProgressDialog pd;
 
-    public void startTask()
-    {
+    public void startTask() {
         //URL EXAMPLE: "http://api.openweathermap.org/data/2.5/weather?q=Belgrade&units=metric&APPID=3e1c8affc8fa507636e25753c5d43afb"
 
         String apiUrl = "";
@@ -47,23 +46,27 @@ public class JsonTaskForCurrentWeather {
 
         sharedpreferences = MainActivity.staticMainActivity.getSharedPreferences(StaticStrings.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
-        if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
-        {
-            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
+        int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+
+        if (sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT, -1) == -1) {
+            sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT, 0).apply();
             //api.openweathermap.org/data/2.5/weather?lat=35&lon=139
-            apiUrl = "http://api.openweathermap.org/data/2.5/weather?lat=" + sharedpreferences.getString("LAT", "") +"&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" +StaticStrings.API_KEY;
-        }
-        else {
+            if (selected == 0)
+                apiUrl = "http://api.openweathermap.org/data/2.5/weather?lat=" + sharedpreferences.getString("LAT", "") + "&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" + StaticStrings.API_KEY;
+            else
+                apiUrl = "http://api.openweathermap.org/data/2.5/weather?lat=" + sharedpreferences.getString("LAT", "") + "&lon=" + sharedpreferences.getString("LON", "") + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" + StaticStrings.API_KEY;
+
+        } else {
 
             String cityName = sharedpreferences.getString(StaticStrings.CITY_TO_SEARCH, "");
 
-            int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
+
             if (selected == 0)
                 apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + cityName + "&units=" + StaticStrings.METRIC_UNITS + "&APPID=" + StaticStrings.API_KEY;
             else
                 apiUrl = "http://api.openweathermap.org/data/2.5/" + StaticStrings.API_CURRENT + cityName + "&units=" + StaticStrings.IMPERIAL_UNITS + "&APPID=" + StaticStrings.API_KEY;
         }
-        new JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,  apiUrl);
+        new JsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, apiUrl);
     }
 
     private boolean error = false;
@@ -100,7 +103,7 @@ public class JsonTaskForCurrentWeather {
                 is = connection.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line = null;
-                while (  (line = br.readLine()) != null )
+                while ((line = br.readLine()) != null)
                     buffer.append(line + "\r\n");
 
                 is.close();
@@ -130,12 +133,11 @@ public class JsonTaskForCurrentWeather {
         }
 
 
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            if(result!=null && error == false) {
+            if (result != null && error == false) {
                 Log.i("RESSULTT", result);
 
 //                if (pd.isShowing()) {
@@ -149,9 +151,7 @@ public class JsonTaskForCurrentWeather {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
+            } else {
 //                if (pd.isShowing()) {
 //                    pd.dismiss();
 //                }
