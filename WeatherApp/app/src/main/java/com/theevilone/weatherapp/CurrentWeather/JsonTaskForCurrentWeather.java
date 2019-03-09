@@ -91,7 +91,6 @@ public class JsonTaskForCurrentWeather {
 
             try {
                 URL url = new URL(params[0]);
-                Log.i("RESSULTT", params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -111,7 +110,6 @@ public class JsonTaskForCurrentWeather {
                 return buffer.toString();
 
             } catch (MalformedURLException e) {
-                Log.i("MalformedURLException", "   ");
                 e.printStackTrace();
             } catch (IOException e) {
                 error = true;
@@ -138,11 +136,6 @@ public class JsonTaskForCurrentWeather {
             super.onPostExecute(result);
 
             if (result != null && error == false) {
-                Log.i("RESSULTT", result);
-
-//                if (pd.isShowing()) {
-//                    pd.dismiss();
-//                }
 
                 JSONParserForCurrentWeather jsonParser = new JSONParserForCurrentWeather(result);
                 try {
@@ -152,9 +145,6 @@ public class JsonTaskForCurrentWeather {
                     e.printStackTrace();
                 }
             } else {
-//                if (pd.isShowing()) {
-//                    pd.dismiss();
-//                }
 
                 CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
                 CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);

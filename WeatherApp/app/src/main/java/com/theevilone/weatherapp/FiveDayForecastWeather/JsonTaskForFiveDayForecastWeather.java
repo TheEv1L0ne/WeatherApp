@@ -93,7 +93,6 @@ public class JsonTaskForFiveDayForecastWeather {
 
             try {
                 URL url = new URL(params[0]);
-                Log.i("RESSULTT", params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -138,14 +137,8 @@ public class JsonTaskForFiveDayForecastWeather {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-//            if(result!=null)
-//                if (pd.isShowing()){
-//                    pd.dismiss();
-//                }
-
 
             if (result != null & error == false) {
-                Log.i("RESSULTT", result);
 
                 JSONParserForFiveDayForecastWeather jsonParser = new JSONParserForFiveDayForecastWeather(result);
                 try {
@@ -155,9 +148,6 @@ public class JsonTaskForFiveDayForecastWeather {
                     e.printStackTrace();
                 }
             } else {
-//                if (pd.isShowing()) {
-//                    pd.dismiss();
-//                }
 
                 CustomSharedPreferences customSharedPreferences = new CustomSharedPreferences(MainActivity.staticMainActivity);
                 CurrentWeather currentWeather = customSharedPreferences.getCurrentWeather(StaticStrings.CURRENT_WEATHER_DATA_KEY);

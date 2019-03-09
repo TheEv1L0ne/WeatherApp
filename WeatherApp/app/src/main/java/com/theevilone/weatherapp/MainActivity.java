@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     AutoCompleteTextView searchText;
     LinearLayout searchMainDialog;
     Button searchByLocation;
+    //Search Dialog
 
     //Frist time in app dialog
     LinearLayout firstTimeDialog;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnFirstCancel;
     LinearLayout firstDialog;
 
-    ///
+    ///To check if dialogs are open or closed
     boolean settingsOpen = false;
     boolean searchOpen = false;
     boolean firstOpen = false;
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         cityName = findViewById(R.id.tv_selected_city);
 
         //SETTINGS - START
-
         settingsDialog = findViewById(R.id.dialog_settings);
         settingsDialogMain = findViewById(R.id.dialog_settings_main);
 
@@ -166,13 +166,11 @@ public class MainActivity extends AppCompatActivity {
 
         int selected = sharedpreferences.getInt(StaticStrings.UNITS_SELECTED, 0);
         if(selected == 0) {
-            Log.i("Settings: ", "ZERO");
             celsiusCheckBox.setChecked(true);
             fahrenheitCheckBox.setChecked(false);
         }
         else
         {
-            Log.i("Settings: ", "UNO");
             celsiusCheckBox.setChecked(false);
             fahrenheitCheckBox.setChecked(true);
         }
@@ -304,8 +302,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
         {
-            Log.i("ToastLog", "First time here");
-//            firstTimeDialog.setVisibility(View.VISIBLE);
             openDialogWithAnimation(firstTimeDialog, firstTimeDialog);
             firstOpen = true;
 
@@ -314,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
         btnFirstCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                firstTimeDialog.setVisibility(View.GONE);
                 closeDialogWithAnimation(firstTimeDialog, firstTimeDialog);
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                 sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
@@ -327,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 checkLocationPermission();
                 closeDialogWithAnimation(firstTimeDialog, firstTimeDialog);
-//                firstTimeDialog.setVisibility(View.GONE);
                 firstOpen = false;
             }
         });
@@ -368,10 +362,8 @@ public class MainActivity extends AppCompatActivity {
 
         searchText = (AutoCompleteTextView) findViewById(R.id.et_search_city_name);
 
-//        String[] countries = getResources().getStringArray(R.array.list_of_countries);
         int resId = getResources().getIdentifier("list_of_countries", "array", this.getPackageName());
         String[] countries = getResources().getStringArray(resId);
-        Log.i("AKJFK", String.valueOf(countries.length));
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>
                 (this,android.R.layout.simple_list_item_1,countries);
         searchText.setAdapter(adapter1);
@@ -443,15 +435,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         } else {
-            Log.i("LOCATION_SERACH", "VEC IMA PERMISIJU PERMISIJU");
-
 
             GPSTracker gps = new GPSTracker(this);
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
-
-            Log.i("latitude", String.valueOf(latitude));
-            Log.i("longitude", String.valueOf(longitude));
 
             sharedpreferences.edit().putString("LAT", String.valueOf(latitude)).apply();
             sharedpreferences.edit().putString("LON", String.valueOf(longitude)).apply();
@@ -472,23 +459,16 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Log.i("LOCATION_SERACH", "DAO PERMISIJU");
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
-                        Log.i("LOCATION_SERACH", "DAO PERMISIJU 123");
-                        //Request location updates:
-//                        locationManager.requestLocationUpdates(provider, 400, 1, this);
 
                         GPSTracker gps = new GPSTracker(this);
                         double latitude = gps.getLatitude();
                         double longitude = gps.getLongitude();
-
-                        Log.i("latitude", String.valueOf(latitude));
-                        Log.i("longitude", String.valueOf(longitude));
 
                         sharedpreferences.edit().putString("LAT", String.valueOf(latitude)).apply();
                         sharedpreferences.edit().putString("LON", String.valueOf(longitude)).apply();
@@ -498,7 +478,6 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    Log.i("LOCATION_SERACH", "NIJE DAO PERMISIJU");
                     //User didn't grant permission... make sure that location dialog doesn't show again
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();

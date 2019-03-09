@@ -48,7 +48,6 @@ public class CustomSharedPreferences {
         for(int i=0;i<fiveDayWeather.getDay().size();i++)
         {
             editor.putInt(key + "_size",fiveDayWeather.getDay().size());
-            Log.i("CUSTON SHERED", String.valueOf(fiveDayWeather.getDay().size()));
             editor.putString(key+"_day"+i,fiveDayWeather.getDay().get(i));
             editor.putString(key+"_image"+i,fiveDayWeather.getImage().get(i));
             editor.putString(key+"_tempMax"+i,fiveDayWeather.getTemperatureMax().get(i));
@@ -61,10 +60,8 @@ public class CustomSharedPreferences {
     {
         FiveDayWeather fiveDayWeather = new FiveDayWeather();
         int size = sharedPreferences.getInt(key+"_size", 0);
-        Log.i("CUSTON SHERED", String.valueOf(size));
         for(int i=0;i<size;i++)
         {
-            Log.i("CUSTON SHERED I: ", String.valueOf(i));
             fiveDayWeather.getDay().add(sharedPreferences.getString(key+"_day"+i, ""));
             fiveDayWeather.getImage().add(sharedPreferences.getString(key+"_image"+i, ""));
             fiveDayWeather.getTemperatureMax().add(sharedPreferences.getString(key+"_tempMax"+i, ""));

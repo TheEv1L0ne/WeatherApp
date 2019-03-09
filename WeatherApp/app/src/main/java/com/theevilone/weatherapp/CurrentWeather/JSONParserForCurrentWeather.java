@@ -18,7 +18,6 @@ public class JSONParserForCurrentWeather {
         JSONObject jObject = new JSONObject(jsonString);
         String cityName = jObject.getString("name");
         String aJsonString = jObject.getString("main");
-        Log.i("JSONLOG", aJsonString);
 
         JSONObject jObjectMain = new JSONObject(aJsonString);
         String temp = jObjectMain.getString("temp");
@@ -45,11 +44,6 @@ public class JSONParserForCurrentWeather {
             }
         }
 
-        Log.i("JSONLOG", temp);
-        Log.i("JSONLOG", humidity);
-        Log.i("JSONLOG", pressure);
-        Log.i("JSONLOG", icon);
-        Log.i("JSONLOG", description);
 
         CurrentWeather currentWeather = new CurrentWeather();
         currentWeather.setCityName(cityName);

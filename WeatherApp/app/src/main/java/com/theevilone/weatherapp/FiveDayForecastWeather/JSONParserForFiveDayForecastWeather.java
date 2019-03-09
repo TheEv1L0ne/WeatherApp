@@ -80,8 +80,6 @@ public class JSONParserForFiveDayForecastWeather {
                 String tMin = mainObject.getString("temp_min");
                 String tMax = mainObject.getString("temp_max");
 
-//                Log.i("DAY LOG", "MIN " + tMin);
-//                Log.i("DAY LOG", "MAX " + tMax);
 
                 int tempMin = (Float.valueOf(tMin).intValue());
                 int tempMax = (Float.valueOf(tMax)).intValue();
@@ -95,9 +93,6 @@ public class JSONParserForFiveDayForecastWeather {
 
                     startMax = tempMax;
                     startMin = tempMin;
-
-                    Log.i("DAY LOG", "NEW DAY MIN " + startMin);
-                    Log.i("DAY LOG", "NEW DAY MAX " + startMax);
 
 
                     temperatureMax.add(String.valueOf(tempMax));
@@ -116,12 +111,9 @@ public class JSONParserForFiveDayForecastWeather {
                         temperatureMin.set(temperatureMin.size()-1,String.valueOf(tempMin));
                     }
 
-                    Log.i("DAY LOG", "SAME DAY MIN " + startMin);
-                    Log.i("DAY LOG", "SAME DAY MAX " + startMax);
 
                 }
 
-                Log.i("DAY LOG", "DAY " + Integer.parseInt(dayOfTheWeek1));
 
 
             } catch (JSONException e) {
