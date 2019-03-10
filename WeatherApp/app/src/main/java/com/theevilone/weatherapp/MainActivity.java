@@ -302,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(sharedpreferences.getInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,-1) == -1)
         {
+            Log.i("PERMISSION", "opening first dialog");
             openDialogWithAnimation(firstTimeDialog, firstTimeDialog);
             firstOpen = true;
 
@@ -479,6 +480,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     //User didn't grant permission... make sure that location dialog doesn't show again
+
+                    Log.i("PERMISSION", "User didn't grant permission.");
+
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_CURRENT,0).apply();
                     sharedpreferences.edit().putInt(StaticStrings.GET_DATA_FOR_FIRST_TIME_FIVE_DAY,0).apply();
                 }
